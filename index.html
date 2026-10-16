@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Hub · 方毅的作品与 Pages 整合中心</title>
+  <meta name="description" content="个人项目整合导航与作品展示中心，聚合 GitHub Pages、在线演示及开源项目" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #0a0d14;
+      --bg-secondary: #101522;
+      --bg-card: rgba(18, 24, 38, 0.7);
+      --bg-card-hover: rgba(26, 34, 54, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(99, 102, 241, 0.4);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #6366f1;
+      --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --accent-glow: rgba(99, 102, 241, 0.25);
+      --badge-bg: rgba(99, 102, 241, 0.12);
+      --badge-text: #818cf8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.85);
+      --bg-card-hover: #ffffff;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(99, 102, 241, 0.5);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --accent-glow: rgba(99, 102, 241, 0.15);
+      --badge-bg: rgba(99, 102, 241, 0.08);
+      --badge-text: #4f46e5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 20%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+      background-attachment: fixed;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      padding: 40px 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(10, 13, 20, 0.65);
+    }
+    [data-theme="light"] header {
+      background: rgba(248, 250, 252, 0.75);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--accent-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-text p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .btn-icon:hover {
+      border-color: var(--border-hover);
+      color: var(--text-main);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-gradient);
+      color: white;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--accent-glow);
+      transition: var(--transition);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 60px 0 30px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--badge-bg);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 999px;
+      color: var(--badge-text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .hero-badge .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--success);
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero-title span {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto 36px;
+    }
+
+    /* Stats bar */
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-label {
+      font-size: 0.825rem;
+      color: var(--text-dim);
+    }
+
+    /* Filter & Search Bar */
+    .controls-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 36px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+      max-width: 380px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 11px 16px 11px 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-box input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .filter-tab:hover {
+      color: var(--text-main);
+      background: var(--bg-secondary);
+    }
+    .filter-tab.active {
+      background: var(--badge-bg);
+      border-color: rgba(99, 102, 241, 0.3);
+      color: var(--badge-text);
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.4);
+      background: var(--bg-card-hover);
+    }
+
+    .card-banner {
+      height: 150px;
+      position: relative;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card-banner-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.15;
+      background-size: 20px 20px;
+      background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
+    }
+
+    .card-banner-icon {
+      font-size: 44px;
+      z-index: 2;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
+      transition: var(--transition);
+    }
+    .card:hover .card-banner-icon {
+      transform: scale(1.1) rotate(4deg);
+    }
+
+    .card-badge-status {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 3;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(8px);
+    }
+    .status-live {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .status-dev {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .card-content {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-category {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .card-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.825rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .card-btn-demo {
+      background: var(--accent);
+      color: white;
+    }
+    .card-btn-demo:hover {
+      background: #4f46e5;
+    }
+
+    .card-btn-repo {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+    .card-btn-repo:hover {
+      border-color: var(--text-muted);
+      color: var(--text-main);
+    }
+
+    /* Management Section / Helper Tool */
+    .manager-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 36px 30px;
+      margin-bottom: 60px;
+    }
+
+    .manager-header {
+      margin-bottom: 24px;
+    }
+    .manager-header h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .manager-header p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .manager-form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .input-group input, .input-group select, .input-group textarea {
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+      color: var(--text-main);
+      font-size: 0.875rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .code-preview-box {
+      margin-top: 20px;
+      background: #000000;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.825rem;
+      color: #38bdf8;
+      position: relative;
+      overflow-x: auto;
+      max-height: 220px;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: var(--accent);
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+    }
+    .empty-state p {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header>
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+      <a href="#" class="brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <h1>Fangyi's Hub <span style="font-size:0.65rem; padding:2px 8px; border-radius:10px; background:var(--badge-bg); color:var(--badge-text);">Pages</span></h1>
+          <p>fangyi19750705-rgb · GitHub Project Gateway</p>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="btn-icon" title="切换深色/浅色模式">
+          <span id="themeIcon">🌙</span>
+        </button>
+        <a href="https://github.com/fangyi19750705-rgb" target="_blank" class="btn-icon" title="访问 GitHub 个人主页">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="#managerSection" class="btn-primary">
+          <span>➕ 添加新项目</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span>GitHub Pages 统一聚合门户已上线</span>
+      </div>
+      <h1 class="hero-title">
+        探索与体验 <span>创意与工程</span> 的交汇
+      </h1>
+      <p class="hero-subtitle">
+        集中收录 AI Agent 实验、WebGL/3D 渲染、自动化工具与全栈项目。随时点击在线演示，快速探索源码。
+      </p>
+
+      <!-- Stats Bar -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-num" id="totalProjectsCount">0</div>
+          <div class="stat-label">收录项目 (Projects)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="liveProjectsCount">0</div>
+          <div class="stat-label">运行中演示 (Live Demos)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="categoriesCount">0</div>
+          <div class="stat-label">覆盖类别 (Categories)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Controls (Search & Category filter) -->
+    <section class="controls-wrapper">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索项目名称、标签或描述..." />
+      </div>
+
+      <div class="filter-tabs" id="filterTabs">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section class="projects-grid" id="projectsGrid">
+      <!-- Projects injected here -->
+    </section>
+
+    <!-- Manager & Project Card Generator Helper -->
+    <section class="manager-section" id="managerSection">
+      <div class="manager-header">
+        <h2>🛠️ 快速配置与管理新项目</h2>
+        <p>未来有新的 GitHub Pages 或项目，在这里填入信息，一键生成标准代码片段，复制黏贴到当前文件顶部的项目列表即可！</p>
+      </div>
+
+      <div class="manager-form-grid">
+        <div class="input-group">
+          <label>项目名称 (Title)</label>
+          <input type="text" id="newTitle" placeholder="如: Anthousa 3D 演化沙盒" />
+        </div>
+        <div class="input-group">
+          <label>分类类别 (Category)</label>
+          <select id="newCategory">
+            <option value="3D & WebGL">3D & WebGL</option>
+            <option value="AI & Agents">AI & Agents</option>
+            <option value="Tools & Utils">Tools & Utils</option>
+            <option value="Web Applications">Web Applications</option>
+            <option value="Games">Games</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>状态 (Status)</label>
+          <select id="newStatus">
+            <option value="live">🟢 Live Demo (在线运行)</option>
+            <option value="dev">🟡 In Development (开发中)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>图标 Emoji</label>
+          <input type="text" id="newIcon" placeholder="如: 🏛️ 或 🤖" value="✨" />
+        </div>
+        <div class="input-group" style="grid-column: 1 / -1;">
+          <label>项目简介 (Description)</label>
+          <input type="text" id="newDesc" placeholder="一句话描述项目的亮点与功能..." />
+        </div>
+        <div class="input-group">
+          <label>Pages 演示链接 (Demo URL)</label>
+          <input type="url" id="newDemo" placeholder="https://fangyi19750705-rgb.github.io/xxx" />
+        </div>
+        <div class="input-group">
+          <label>GitHub 仓库链接 (Repo URL)</label>
+          <input type="url" id="newRepo" placeholder="https://github.com/fangyi19750705-rgb/xxx" />
+        </div>
+        <div class="input-group" style="grid-column: 1 / -1;">
+          <label>技术标签 (用逗号分隔)</label>
+          <input type="text" id="newTags" placeholder="WebGL, Three.js, Python, GLSL" />
+        </div>
+      </div>
+
+      <button id="generateBtn" class="btn-primary" style="margin-bottom: 14px;">
+        ⚡ 生成项目配置代码
+      </button>
+
+      <div class="code-preview-box" id="previewBox" style="display:none;">
+        <button class="copy-btn" id="copyCodeBtn">📋 复制 JSON 代码</button>
+        <pre><code id="generatedCode"></code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 方毅 (fangyi19750705-rgb). 托管于 GitHub Pages.</p>
+      <p style="margin-top: 6px; font-size: 0.75rem; color: var(--text-dim);">
+        基于现代化纯原生 Web 构建 · 零第三方打包依赖 · 秒级加载
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // ==========================================
+    // 📁 项目数据列表 (在此处增删改项目)
+    // ==========================================
+    const PROJECTS_DATA = [
+      {
+        id: "anthousa-3d",
+        title: "Anthousa 3D 演化与分支沙盒",
+        category: "3D & WebGL",
+        status: "live",
+        icon: "🏛️",
+        gradient: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%)",
+        desc: "原生 WebGL 驱动的文明建筑演化与分支推演查看器，支持高低差地形烘焙与母题风格渲染。",
+        tags: ["WebGL", "Three.js", "Python", "GLSL"],
+        demoUrl: "https://changsheng0804-blip.github.io/demos/fluffy-yeti/?v=c3300c7",
+        repoUrl: "https://github.com/tanxinhao2026-netizen/anthousa"
+      },
+      {
+        id: "super-save-editor",
+        title: "游戏超级存档编辑器",
+        category: "Tools & Utils",
+        status: "live",
+        icon: "🎮",
+        gradient: "linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%)",
+        desc: "高性能离线桌面级存档查看与编辑套件，支持数据属性实时计算与战斗状态沙盒验证。",
+        tags: ["HTML5", "Canvas", "Offline First", "JSON"],
+        demoUrl: "#",
+        repoUrl: "https://github.com/fangyi19750705-rgb"
+      },
+      {
+        id: "ai-browseros-agent",
+        title: "BrowserOS 自主智能体工作流",
+        category: "AI & Agents",
+        status: "dev",
+        icon: "🤖",
+        gradient: "linear-gradient(135deg, #4c1d95 0%, #6d28d9 50%, #7c3aed 100%)",
+        desc: "基于 MCP 协议与 BrowserOS 浏览器环境的深层网页自动化集成、多端会话与自动化部署引擎。",
+        tags: ["MCP", "LLM", "BrowserOS", "Automation"],
+        demoUrl: "#",
+        repoUrl: "https://github.com/fangyi19750705-rgb"
+      },
+      {
+        id: "creative-showcase-hub",
+        title: "GitHub Pages 整合展示门户",
+        category: "Web Applications",
+        status: "live",
+        icon: "🌟",
+        gradient: "linear-gradient(135deg, #831843 0%, #be185d 50%, #db2777 100%)",
+        desc: "本整合主站自身，作为所有个人项目与子 Pages 的汇聚中心，支持分类索引、快速搜索与卡片生成工具。",
+        tags: ["GitHub Pages", "CSS Glassmorphism", "Responsive"],
+        demoUrl: "https://fangyi19750705-rgb.github.io",
+        repoUrl: "https://github.com/fangyi19750705-rgb/fangyi19750705-rgb.github.io"
+      }
+    ];
+
+    // ==========================================
+    // 页面交互与渲染逻辑
+    // ==========================================
+    let currentCategory = "All";
+    let searchQuery = "";
+
+    const gridEl = document.getElementById("projectsGrid");
+    const filterTabsEl = document.getElementById("filterTabs");
+    const searchInput = document.getElementById("searchInput");
+    const totalCountEl = document.getElementById("totalProjectsCount");
+    const liveCountEl = document.getElementById("liveProjectsCount");
+    const catCountEl = document.getElementById("categoriesCount");
+
+    // 初始化统计数据
+    function updateStats() {
+      totalCountEl.textContent = PROJECTS_DATA.length;
+      liveCountEl.textContent = PROJECTS_DATA.filter(p => p.status === 'live').length;
+      const categories = new Set(PROJECTS_DATA.map(p => p.category));
+      catCountEl.textContent = categories.size;
+    }
+
+    // 初始化分类按钮
+    function renderFilterTabs() {
+      const categories = ["All", ...new Set(PROJECTS_DATA.map(p => p.category))];
+      filterTabsEl.innerHTML = categories.map(cat => `
+        <button class="filter-tab ${cat === currentCategory ? 'active' : ''}" data-category="${cat}">
+          ${cat === 'All' ? '全部项目' : cat}
+        </button>
+      `).join('');
+
+      filterTabsEl.querySelectorAll('.filter-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterTabsEl.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.getAttribute('data-category');
+          renderProjects();
+        });
+      });
+    }
+
+    // 渲染卡片列表
+    function renderProjects() {
+      const filtered = PROJECTS_DATA.filter(item => {
+        const matchesCategory = currentCategory === "All" || item.category === currentCategory;
+        const matchesSearch = !searchQuery || 
+          item.title.toLowerCase().includes(searchQuery) ||
+          item.desc.toLowerCase().includes(searchQuery) ||
+          item.tags.some(t => t.toLowerCase().includes(searchQuery));
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        gridEl.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size: 3rem;">🔍</div>
+            <h3 style="color:var(--text-main); margin-top:12px;">未找到匹配的项目</h3>
+            <p>请尝试其他搜索关键词，或选择不同的分类类别。</p>
+          </div>
+        `;
+        return;
+      }
+
+      gridEl.innerHTML = filtered.map(item => `
+        <article class="card">
+          <div class="card-banner" style="background: ${item.gradient || 'linear-gradient(135deg, #1e1b4b, #312e81)'}">
+            <div class="card-banner-pattern"></div>
+            <div class="card-banner-icon">${item.icon || '🚀'}</div>
+            <div class="card-badge-status ${item.status === 'live' ? 'status-live' : 'status-dev'}">
+              <span>${item.status === 'live' ? '● Live' : '● In Dev'}</span>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="card-category">${item.category}</div>
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-desc">${item.desc}</p>
+            <div class="card-tags">
+              ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+            <div class="card-footer">
+              <a href="${item.demoUrl}" target="_blank" class="card-btn card-btn-demo" ${item.demoUrl === '#' ? 'style="opacity:0.6; pointer-events:none;"' : ''}>
+                <span>🖥️ 在线体验</span>
+              </a>
+              <a href="${item.repoUrl}" target="_blank" class="card-btn card-btn-repo">
+                <span>📦 源码仓库</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // 搜索事件
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value.trim().toLowerCase();
+      renderProjects();
+    });
+
+    // 主题切换
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    let isDark = true;
+
+    themeToggle.addEventListener("click", () => {
+      isDark = !isDark;
+      if (isDark) {
+        document.documentElement.removeAttribute("data-theme");
+        themeIcon.textContent = "🌙";
+      } else {
+        document.documentElement.setAttribute("data-theme", "light");
+        themeIcon.textContent = "☀️";
+      }
+    });
+
+    // ==========================================
+    // 快速生成代码工具
+    // ==========================================
+    const generateBtn = document.getElementById("generateBtn");
+    const previewBox = document.getElementById("previewBox");
+    const generatedCode = document.getElementById("generatedCode");
+    const copyCodeBtn = document.getElementById("copyCodeBtn");
+
+    generateBtn.addEventListener("click", () => {
+      const title = document.getElementById("newTitle").value.trim() || "新项目标题";
+      const category = document.getElementById("newCategory").value;
+      const status = document.getElementById("newStatus").value;
+      const icon = document.getElementById("newIcon").value.trim() || "✨";
+      const desc = document.getElementById("newDesc").value.trim() || "项目功能与特色简述。";
+      const demoUrl = document.getElementById("newDemo").value.trim() || "#";
+      const repoUrl = document.getElementById("newRepo").value.trim() || "https://github.com/fangyi19750705-rgb";
+      const tagsStr = document.getElementById("newTags").value.trim();
+      const tags = tagsStr ? tagsStr.split(",").map(s => s.trim()).filter(Boolean) : ["HTML", "Demo"];
+
+      const newObject = {
+        id: "project-" + Date.now().toString(36),
+        title,
+        category,
+        status,
+        icon,
+        gradient: "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)",
+        desc,
+        tags,
+        demoUrl,
+        repoUrl
+      };
+
+      const codeString = JSON.stringify(newObject, null, 2);
+      generatedCode.textContent = "  " + codeString.split("\n").join("\n  ") + ",";
+      previewBox.style.display = "block";
+      previewBox.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    copyCodeBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(generatedCode.textContent).then(() => {
+        copyCodeBtn.textContent = "✅ 已复制到剪贴板";
+        setTimeout(() => {
+          copyCodeBtn.textContent = "📋 复制 JSON 代码";
+        }, 2000);
+      });
+    });
+
+    // 初次启动执行
+    updateStats();
+    renderFilterTabs();
+    renderProjects();
+  </script>
+</body>
+</html>
